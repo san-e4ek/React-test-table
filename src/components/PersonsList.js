@@ -3,7 +3,13 @@ import {DetailPerson} from "./DetailPerson"
 import {Input, Col, Table} from 'antd'
 
 export const PersonsList = props => {
-    const {Search} = Input
+    const {Search} = Input;
+    const [detail, setDetail] = useState({});
+    const data = [...props.data].map((obj, index) => {
+        const newObj = {...obj, key: index + 1};
+        return newObj
+    });
+
     const columns = [
         {
             title: '№',
@@ -28,24 +34,8 @@ export const PersonsList = props => {
             title: 'Phone',
             dataIndex: 'phone',
         },
-    ]
+    ];
 
-    function onChange(pagination, filters, sorter, extra) {
-        console.log('params', pagination, filters, sorter, extra);
-    }
-
-    const data = [...props.data].map((obj, index) => {
-        const newObj = {...obj, key: index + 1}
-        return newObj
-    })
-
-    const [fullPerson, setFullPerson] = useState({})
-    const [visible, changeVisible] = useState(false)
-
-    const handlerPerson = record => {
-        setFullPerson(record)
-        changeVisible(true)
-    }
 
     return (
         <div>
@@ -58,15 +48,14 @@ export const PersonsList = props => {
                 pagination={{pageSize: 15, position: ['bottomCenter']}}
                 columns={columns}
                 dataSource={data}
-                onChange={onChange}
                 onRow={record => {
                     return {
-                        onClick: e => handlerPerson(record)
+                        onClick: e => setDetail(record)
                     }
                 }}
             />
 
-            {visible ? <DetailPerson {...fullPerson}/> : null}
+            {Object.keys(detail).length ? <DetailPerson {...detail}/> : null}
         </div>
     )
-}
+};

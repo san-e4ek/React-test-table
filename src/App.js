@@ -1,58 +1,83 @@
-import React, {useEffect, useState} from 'react'
-import {PersonsList} from "./components/PersonsList"
-import {FormAddPerson} from "./components/FormAddPerson"
+import React, {useState} from 'react'
+import {Row, Col, Button, Spin, Alert} from 'antd'
+import {LoadingOutlined} from '@ant-design/icons'
 import 'antd/dist/antd.css'
-import {Row, Col, Button, Spin} from 'antd'
-import { grey } from '@ant-design/colors'
-import { LoadingOutlined } from '@ant-design/icons'
+import {connect, useSelector} from "react-redux"
+import {useDispatch} from "react-redux"
+import {fetchMinData, fetchBigData, addPerson, showAlert} from './redux/actions'
+import {FormAddPerson} from "./components/FormAddPerson"
+import {PersonsList} from "./components/PersonsList"
 
-function App() {
-    const antIcon = <LoadingOutlined style={{ fontSize: 45 }} spin />
-    const [minData, setMinData] = useState([])
-    // const [bigData, setBigData] = useState([])
-    const [isBigData, setIsBigData] = useState(false)
-    const [isOpen, setIsOpen] = useState(false)
+function App(props) {
+    const antIcon = <LoadingOutlined style={{fontSize: 45}} spin/>;
+    const dispatch = useDispatch();
+    const minData = useSelector(state => state.data.minData);
+    const bigData = useSelector(state => state.data.bigData);
+    const loader = useSelector(state => state.data.loading);
+    const alert = useSelector(state => state.data.alert);
+    const [isOpen, setIsOpen] = useState(false);
+    const [showData, changeShowData] = useState(null);
 
-    useEffect(() => {
-        fetch('http://www.filltext.com/?rows=32&id={number|1000}&firstName={firstName}&lastName={lastName}&email={email}&phone={phone|(xxx)xxx-xx-xx}&address={addressObject}&description={lorem|32}')
-            .then(result => result.json())
-            .then(data => setMinData([...data]))
-
-        // fetch('http://www.filltext.com/?rows=1000&id={number|1000}&firstName={firstName}&delay=3&lastName={lastName}&email={email}&phone={phone|(xxx)xxx-xx-xx}&address={addressObject}&description={lorem|32}')
-        //     .then(result => result.json())
-        //     .then(data => setBigData([...data]))
-    }, [])
-
-    const addNewPerson = data => {
-        setMinData([{...data}, ...minData])
-        // setBigData([{...data}, ...bigData])
-        setIsOpen(data.isOpen)
-    }
+    const addPerson = data => {
+        setIsOpen(data.isOpen);
+        props.addPerson(data);
+        props.showAlert('Успешно добавлен');
+    };
 
     return (
         <Col span={20} offset={2}>
             <Row justify="center">
-                <h1 className={"text-center"}>Persons list</h1>
+                <h1>Solders</h1>
             </Row>
+
+            {alert && <Alert style={{marginBottom: 20}} message={props.data.alert} type="success"/>}
+
             <Row justify="center">
-                <Button type="primary" onClick={e => setIsBigData(false)}>Маленький объем</Button>
-                <Button style={{margin: '0 10px'}} type="primary" onClick={e => setIsBigData(true)}>Большой объем</Button>
-                <Button type="primary" onClick={e => setIsOpen(!isOpen)}>Добавить нового
-                    пользователя
-                </Button>
+                <Button
+                    type="primary"
+                    onClick={e => {
+                        dispatch(fetchMinData());
+                        changeShowData(true)
+                    }}
+                >Маленький объем</Button>
+
+                <Button
+                    style={{margin: '0 10px'}}
+                    type="primary"
+                    onClick={e => {
+                        dispatch(fetchBigData());
+                        changeShowData(false)
+                    }}
+                >Большой объем</Button>
+
+                <Button
+                    type="primary"
+                    onClick={e => setIsOpen(!isOpen)}
+                >Добавить нового</Button>
             </Row>
-            {!isOpen ? null : <FormAddPerson data={addNewPerson}/>}
 
-            {!minData.length
-                // || !bigData.length
-                ? <Spin style={{margin: "20% 50%"}} indicator={antIcon}/>
-                : !isBigData
-                    ? <PersonsList data={minData}/>
-                    : <div>Bigdata</div>}
-            {/*<PersonsList data={bigData}/>*/}
+            {isOpen && <FormAddPerson personHandler={addPerson}/>}
 
+            <Row justify="center">
+                <Col span={20}>
+                    {
+                        !minData.length && !bigData.length
+                            ? <h2 style={{textAlign: 'center', marginTop: 20}}>Данных пока нет :(</h2>
+                            : showData
+                            ? <PersonsList data={minData}/>
+                            : <PersonsList data={bigData}/>
+                    }
+
+                    {loader && <Spin style={{margin: '20% 50%'}} indicator={antIcon}/>}
+                </Col>
+            </Row>
         </Col>
     )
 }
 
-export default App
+const mapStateToProps = state => ({
+    data: state.data
+});
+
+
+export default connect(mapStateToProps, {addPerson, showAlert})(App)
