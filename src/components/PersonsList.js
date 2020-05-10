@@ -51,7 +51,7 @@ export default props => {
         {
             title: 'Phone',
             dataIndex: 'phone',
-            sorter: (a, b) => a.phone - b.phone
+            sorter: (a, b) => a.phone.replace(/\D+/g,"") - b.phone.replace(/\D+/g,"")
         }
     ]
 
