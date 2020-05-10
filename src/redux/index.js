@@ -1,10 +1,10 @@
 import {applyMiddleware, combineReducers, compose, createStore} from "redux"
-import {dataReducer} from "./dataReducer"
+import {stateReducer} from "./stateReducer"
 import thunk from "redux-thunk";
 
 
 const rootReducer = combineReducers({
-    data: dataReducer
+    state: stateReducer
 });
 
 const configurationStore = () => {

@@ -2,7 +2,25 @@ export const addPerson = data => {
     return {
         type: 'ADD_PERSON', data
     }
-};
+}
+
+export const onSearch = value => {
+    return {
+        type: 'SEARCH', value
+    }
+}
+
+export function showForm() {
+    return dispatch => {
+        dispatch({type: 'SHOW_FORM'})
+    }
+}
+
+export function showDetail(record) {
+    return dispatch => {
+        dispatch({type: 'SHOW_DETAIL', record})
+    }
+}
 
 export function showLoader() {
     return {
@@ -32,32 +50,16 @@ export function hideAlert() {
     }
 }
 
-export function fetchMinData() {
+export function fetchData(url, type) {
     return async dispatch => {
         try {
             dispatch(showLoader());
-            const response = await fetch('http://www.filltext.com/?rows=32&id={number|1000}&firstName={firstName}&lastName={lastName}&email={email}&phone={phone|(xxx)xxx-xx-xx}&address={addressObject}&description={lorem|32}');
+            const response = await fetch(url);
             const data = await response.json();
-            dispatch({type: 'MIN/FETCH_DATA', data});
+            dispatch({type, data});
             dispatch(hideLoader())
         } catch (e) {
             dispatch(showAlert('Сервак не дает :('))
         }
-
-    }
-}
-
-export function fetchBigData() {
-    return async dispatch => {
-        try {
-            dispatch(showLoader());
-            const response = await fetch('http://www.filltext.com/?rows=1000&id={number|1000}&firstName={firstName}&lastName={lastName}&email={email}&phone={phone|(xxx)xxx-xx-xx}&address={addressObject}&description={lorem|32}');
-            const data = await response.json();
-            dispatch({type: 'BIG/FETCH_DATA', data});
-            dispatch(hideLoader())
-        } catch (e) {
-            dispatch(showAlert('Сервак не дает :('))
-        }
-
     }
 }

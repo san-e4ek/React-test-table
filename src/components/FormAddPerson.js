@@ -1,22 +1,18 @@
 import React, {useState} from 'react'
 import {Form, Input, Button} from 'antd'
 
-export const FormAddPerson = props => {
-    const [isSend, setIsSend] = useState({
+export default props => {
+    const [data, setData] = useState({
         id: Date.now().toString(),
         firstName: '',
         lastName: '',
         email: '',
         phone: ''
-    });
+    })
 
     const changeForm = e => {
-        setIsSend({...isSend, ...{[e.target.name]: e.target.value}})
-    };
-
-    const submitForm = () => {
-        props.personHandler({...isSend, isOpen: false});
-    };
+        setData({...data, ...{[e.target.name]: e.target.value}})
+    }
 
     return (
         <Form
@@ -24,7 +20,7 @@ export const FormAddPerson = props => {
             wrapperCol={{span: 12}}
             labelCol={{span: 6}}
             name="nest-messages"
-            onFinish={submitForm}
+            onFinish={() => props.personHandler(data)}
         >
             <Form.Item
                 name={['user', 'firstName']}
@@ -60,15 +56,15 @@ export const FormAddPerson = props => {
             </Form.Item>
 
             <Form.Item wrapperCol={{span: 12, offset: 16}}>
-                <Button type="primary" htmlType="submit"
-                        disabled={
-                            isSend.firstName.trim() &&
-                            isSend.lastName.trim() &&
-                            isSend.email.trim() &&
-                            isSend.phone.trim()
-                                ? false
-                                : true
-                        }>
+                <Button type="primary"
+                        htmlType="submit"
+                        disabled={!(
+                            data.firstName.trim()
+                            && data.lastName.trim()
+                            && data.email.trim()
+                            && data.phone.trim()
+                        )}
+                >
                     Добавить
                 </Button>
             </Form.Item>

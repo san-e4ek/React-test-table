@@ -1,61 +1,73 @@
-import React, {useState} from 'react'
-import {DetailPerson} from "./DetailPerson"
-import {Input, Col, Table} from 'antd'
+import React from 'react'
+import {Table} from 'antd'
+import {useDispatch} from "react-redux";
 
-export const PersonsList = props => {
-    const {Search} = Input;
-    const [detail, setDetail] = useState({});
-    const data = [...props.data].map((obj, index) => {
-        const newObj = {...obj, key: index + 1};
-        return newObj
-    });
-
+export default props => {
+    const dispatch = useDispatch()
+    const data = props.data.map((item, i) => item = {...item, key: i})
     const columns = [
         {
-            title: '№',
-            dataIndex: 'key',
-            sorter: (a, b) => a.key - b.key
+            title: 'ID',
+            dataIndex: 'id',
+            key: 'key',
+            sorter: (a, b) => a.id - b.id
         },
         {
             title: 'First name',
             dataIndex: 'firstName',
-            sorter: (a, b) => a.firstName.length - b.firstName.length
+            sorter: (a, b) => {
+                if (a.firstName < b.firstName) {
+                    return - 1
+                }
+                if (a.firstName > b.firstName) {
+                    return + 1
+                }
+            }
         },
         {
             title: 'Last name',
             dataIndex: 'lastName',
-            sorter: (a, b) => a.lastName.length - b.lastName.length
+            sorter: (a, b) => {
+                if (a.lastName < b.lastName) {
+                    return - 1
+                }
+                if (a.lastName > b.lastName) {
+                    return + 1
+                }
+            }
         },
         {
             title: 'Email',
             dataIndex: 'email',
+            sorter: (a, b) => {
+                if (a.email < b.email) {
+                    return - 1
+                }
+                if (a.email > b.email) {
+                    return + 1
+                }
+            }
         },
         {
             title: 'Phone',
             dataIndex: 'phone',
-        },
-    ];
-
+            sorter: (a, b) => a.phone - b.phone
+        }
+    ]
 
     return (
-        <div>
-            <Col span={18} offset={3}>
-                <Search style={{margin: '10px 0'}} placeholder="Введите текст"
-                        onSearch={value => console.log(value)} enterButton/>
-            </Col>
-
+        <>
             <Table
-                pagination={{pageSize: 15, position: ['bottomCenter']}}
+                style={{cursor: 'pointer'}}
+                pagination={{position: ['bottomCenter']}}
                 columns={columns}
                 dataSource={data}
                 onRow={record => {
                     return {
-                        onClick: e => setDetail(record)
+                        onClick: () => dispatch(props.showDetail(record))
                     }
                 }}
             />
-
-            {Object.keys(detail).length ? <DetailPerson {...detail}/> : null}
-        </div>
+        </>
     )
 };
