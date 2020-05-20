@@ -2,19 +2,3 @@
   flex-direction: column;
   margin: 20px 0;
 }
-
-.detail-list {
-  padding: 10px;
-  border: 1px solid #cfcfcf;
-  border-radius: 4px;
-
-  .list-item {
-    list-style: none;
-    border-bottom: 1px solid grey;
-    padding: 10px 0;
-
-    b {
-      float: right;
-    }
-  }
-}

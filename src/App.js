@@ -29,7 +29,7 @@ function App(props) {
     return (
         <Col span={20} offset={2}>
             <Row className="header" justify="center" align="middle">
-                <h1>Solders</h1>
+                <h1>Legion</h1>
                 {alert && <Alert style={{width: '50%'}} message={alert} type="success"/>}
                 {loader && <Spin style={{position: "absolute", left: '35%'}} indicator={antIcon}/>}
             </Row>
@@ -43,7 +43,7 @@ function App(props) {
                 {form && <FormAddPerson personHandler={personHandler}/>}
 
                 <Search style={{margin: '10px 0'}}
-                        placeholder="Введите текст"
+                        placeholder="Type text..."
                         onSearch={value => props.onSearch(value)}
                         enterButton
                 />

@@ -13,7 +13,7 @@ export default props => {
                 type="primary"
                 onClick={() => dispatch(props.fetchData(minDataUrl, 'MIN/FETCH_DATA'))}
             >
-                Маленький объем
+                Troop
             </Button>
 
             <Button
@@ -21,14 +21,14 @@ export default props => {
                 type="primary"
                 onClick={() => dispatch(props.fetchData(bigDataUrl, 'BIG/FETCH_DATA'))}
             >
-                Большой объем
+                Battalion
             </Button>
 
             <Button
                 type="primary"
                 onClick={() => dispatch(props.showForm())}
             >
-                Добавить нового
+                Add warrior
             </Button>
         </Row>
     )
